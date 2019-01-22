@@ -1,11 +1,19 @@
 package server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import protocol.PacketCodeC;
+import protocol.request.MessageRequestPacket;
 import server.handler.ServerHandler;
+import utils.LoginUtil;
+
+import java.util.Scanner;
 
 public class NettyServer {
     private static final Integer serverPort=6666;

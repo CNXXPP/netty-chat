@@ -7,8 +7,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import protocol.Packet;
 import protocol.PacketCodeC;
 import protocol.request.LoginRequestPacket;
+import protocol.request.MessageRequestPacket;
 import protocol.respond.LoginRespondPacket;
+import protocol.respond.MessageRespondPacket;
+import utils.LoginUtil;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -35,12 +39,20 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             }
             ByteBuf respondBuffer = PacketCodeC.INSTANCE.encode(loginRespondPacket);
             channel.writeAndFlush(respondBuffer);
+        }else if (packet instanceof MessageRequestPacket) {
+            MessageRequestPacket messageRequestPacket = (MessageRequestPacket) packet;
+            System.out.println(new Date() + ": 收到客户端消息: " + messageRequestPacket.getMessage());
+            MessageRespondPacket messageResponsePacket = new MessageRespondPacket();
+            messageResponsePacket.setMessage("服务端回复【" + messageRequestPacket.getMessage() + "】");
+            ByteBuf responseByteBuf = PacketCodeC.INSTANCE.encode(messageResponsePacket);
+            ctx.channel().writeAndFlush(responseByteBuf);
         }
     }
 
     private boolean valid(LoginRequestPacket loginRequestPacket) {
         System.out.println("登录信息："+loginRequestPacket);
-        if (Objects.equals(loginRequestPacket.getUsername(),"xupan") && Objects.equals(loginRequestPacket.getPassword(),"1123")) {
+        if (Objects.equals(loginRequestPacket.getUsername(),"xupan")
+                && Objects.equals(loginRequestPacket.getPassword(),"1123")) {
             return true;
         } else {
             return false;

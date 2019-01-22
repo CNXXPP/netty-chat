@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import protocol.command.CommandConstants;
 import protocol.request.LoginRequestPacket;
+import protocol.request.MessageRequestPacket;
 import protocol.respond.LoginRespondPacket;
+import protocol.respond.MessageRespondPacket;
 import serialize.Serializer;
 import serialize.SerializerAlgorithmConstants;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ public class PacketCodeC {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(CommandConstants.LOGIN_REQUEST, LoginRequestPacket.class);
         packetTypeMap.put(CommandConstants.LOGIN_RESPONSE, LoginRespondPacket.class);
+        packetTypeMap.put(CommandConstants.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(CommandConstants.MESSAGE_RESPONSE, MessageRespondPacket.class);
         serializerMap = new HashMap<>();
         serializerMap.put(SerializerAlgorithmConstants.JSON,Serializer.DEFAULT);
     }
@@ -70,6 +74,9 @@ public class PacketCodeC {
         byteBuf.readBytes(bytes);
 
         Class<? extends Packet> requestType = getRequestType(command);
+        if (requestType == null) {
+            System.out.println("该class不存在");
+        }
         Serializer serializer = getSerializer(serializeAlgorithm);
 
         if (requestType != null && serializer != null) {
