@@ -5,6 +5,7 @@ import client.handler.LoginResponseHandler;
 import client.handler.MessageResponseHandler;
 import codec.PacketDecoder;
 import codec.PacketEncoder;
+import codec.Spliter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -13,6 +14,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import protocol.PacketCodeC;
 import protocol.request.MessageRequestPacket;
 import utils.LoginUtil;
@@ -31,6 +33,8 @@ public class NettyClient {
         .handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
+                //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));//长度域的起始偏移量、长度域长度
+                ch.pipeline().addLast(new Spliter());
                 ch.pipeline().addLast(new PacketDecoder());
                 ch.pipeline().addLast(new LoginResponseHandler());
                 ch.pipeline().addLast(new MessageResponseHandler());

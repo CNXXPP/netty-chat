@@ -2,6 +2,7 @@ package server;
 
 import codec.PacketDecoder;
 import codec.PacketEncoder;
+import codec.Spliter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -10,6 +11,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import protocol.PacketCodeC;
 import protocol.request.MessageRequestPacket;
 import server.handler.LoginRequestHandler;
@@ -32,6 +34,8 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
 
                     protected void initChannel(NioSocketChannel ch) throws Exception {
+                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));//长度域的起始偏移量、长度域长度
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
