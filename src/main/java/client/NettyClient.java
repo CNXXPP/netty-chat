@@ -1,6 +1,10 @@
 package client;
 
 import client.handler.ClientHandler;
+import client.handler.LoginResponseHandler;
+import client.handler.MessageResponseHandler;
+import codec.PacketDecoder;
+import codec.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -27,7 +31,10 @@ public class NettyClient {
         .handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new ClientHandler());
+                ch.pipeline().addLast(new PacketDecoder());
+                ch.pipeline().addLast(new LoginResponseHandler());
+                ch.pipeline().addLast(new MessageResponseHandler());
+                ch.pipeline().addLast(new PacketEncoder());
             }
         });
 
@@ -55,8 +62,8 @@ public class NettyClient {
 
                     MessageRequestPacket packet = new MessageRequestPacket();
                     packet.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(packet);
-                    channel.writeAndFlush(byteBuf);
+//                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc().buffer(),packet);
+                    channel.writeAndFlush(packet);
                 }
             }
         }).start();

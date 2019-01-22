@@ -1,5 +1,7 @@
 package server;
 
+import codec.PacketDecoder;
+import codec.PacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -10,6 +12,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import protocol.PacketCodeC;
 import protocol.request.MessageRequestPacket;
+import server.handler.LoginRequestHandler;
+import server.handler.MessageRequestHandler;
 import server.handler.ServerHandler;
 import utils.LoginUtil;
 
@@ -28,7 +32,10 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
 
                     protected void initChannel(NioSocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ServerHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         serverBootstrap.bind(serverPort).addListener(future -> {

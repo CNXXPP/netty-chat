@@ -21,7 +21,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println(new Date() + ": 客户端开始登录");
-
         // 创建登录对象
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
         loginRequestPacket.setUserId(UUID.randomUUID().toString());
@@ -29,7 +28,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter{
         loginRequestPacket.setPassword("1123");
 
         // 编码
-        ByteBuf buffer = PacketCodeC.INSTANCE.encode(loginRequestPacket);
+        ByteBuf buffer = PacketCodeC.INSTANCE.encode(ctx.alloc().buffer(),loginRequestPacket);
 
         // 写数据
         ctx.channel().writeAndFlush(buffer);

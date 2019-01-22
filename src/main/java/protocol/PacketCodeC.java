@@ -35,10 +35,10 @@ public class PacketCodeC {
         serializerMap.put(SerializerAlgorithmConstants.JSON,Serializer.DEFAULT);
     }
 
-    public ByteBuf encode(Packet packet) {
+    public ByteBuf encode(ByteBuf byteBuf,Packet packet) {
         // 1. 创建 ByteBuf 对象,Netty 的 ByteBuf 分配器来创建，ioBuffer() 方法会返回适配 io 读写相关的内存，它会尽可能创建一个直接内存，
         // 直接内存可以理解为不受 jvm 堆管理的内存空间，写到 IO 缓冲区的效果更高。
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+        //ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
         // 2. 序列化 Java 对象
         // 接下来，我们将 Java 对象序列化成二进制数据包
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
