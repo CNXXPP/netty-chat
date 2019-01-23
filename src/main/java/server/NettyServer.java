@@ -4,22 +4,13 @@ import codec.PacketDecoder;
 import codec.PacketEncoder;
 import codec.Spliter;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import protocol.PacketCodeC;
-import protocol.request.MessageRequestPacket;
+import server.handler.AuthHandler;
 import server.handler.LoginRequestHandler;
 import server.handler.MessageRequestHandler;
-import server.handler.ServerHandler;
-import utils.LoginUtil;
-
-import java.util.Scanner;
 
 public class NettyServer {
     private static final Integer serverPort=6666;
@@ -38,6 +29,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
@@ -48,7 +40,6 @@ public class NettyServer {
             } else {
                 System.err.println("服务器启动失败!");
             }
-
         });
     }
 }
