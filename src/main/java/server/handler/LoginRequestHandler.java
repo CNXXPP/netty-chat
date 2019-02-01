@@ -1,21 +1,44 @@
 package server.handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import protocol.PacketCodeC;
 import protocol.request.LoginRequestPacket;
 import protocol.respond.LoginRespondPacket;
 import session.Session;
-import utils.LoginUtil;
 import utils.SessionUtil;
 
-import java.util.Objects;
-import java.util.UUID;
 
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("channel绑定到线程，channelRegistered");
+        super.channelRegistered(ctx);
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("channel解绑，channelUnregistered");
+        super.channelUnregistered(ctx);
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("channel准备就绪，channelActive");
+        super.channelActive(ctx);
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("channel读完某次数据，channelReadComplete");
+        super.channelReadComplete(ctx);
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
+        System.out.println("channel 有数据可读：channelRead()");
         LoginRespondPacket loginRespondPacket = new LoginRespondPacket();
         if (valid(loginRequestPacket)) {
             // 校验成功
@@ -35,6 +58,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("channel关闭：channelInactive()");
         Session session = SessionUtil.getSession(ctx.channel());
         System.out.println(session.getUserName()+" 退出");
         SessionUtil.unBindSession(ctx.channel());
