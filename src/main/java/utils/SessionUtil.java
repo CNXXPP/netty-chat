@@ -12,6 +12,11 @@ public class SessionUtil {
     private static final Map<String, Channel> userIdChannelMap = new ConcurrentHashMap<>();
 
 
+    /**
+     * 在channel上绑定用户session信息
+     * @param channel
+     * @param session
+     */
     public static void bindSession(Session session, Channel channel) {
         userIdChannelMap.put(session.getUserId(), channel);
         channel.attr(Attributes.SESSION).set(session);

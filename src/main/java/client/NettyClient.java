@@ -16,6 +16,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import protocol.PacketCodeC;
+import protocol.request.LoginRequestPacket;
 import protocol.request.MessageRequestPacket;
 import utils.LoginUtil;
 
@@ -57,15 +58,27 @@ public class NettyClient {
 
     private static void startConsoleThread(Channel channel) {
         System.out.println("启动控制台通信程序-------->");
+        System.out.println("登录，请输入用户名：");
+        Scanner sc = new Scanner(System.in);
+        String name = sc.nextLine();
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+        loginRequestPacket.setUserId(name);
+        loginRequestPacket.setUsername(name);
+        ByteBuf encode = PacketCodeC.INSTANCE.encode(channel.alloc().buffer(), loginRequestPacket);
+        channel.writeAndFlush(encode);
         new Thread(() -> {
             while (!Thread.interrupted()) {
 //                if (LoginUtil.hasLogin(channel)) {
                 System.out.println("输入消息发送至服务端: ");
-                Scanner sc = new Scanner(System.in);
                 String line = sc.nextLine();
-
+                String[] split = line.split("#");
+                if (split.length < 2) {
+                    System.out.println("请输入正确格式");
+                    continue;
+                }
                 MessageRequestPacket packet = new MessageRequestPacket();
-                packet.setMessage(line);
+                packet.setMessage(split[1]);
+                packet.setToUserId(split[0]);
 //                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc().buffer(),packet);
                 channel.writeAndFlush(packet);
 //                }

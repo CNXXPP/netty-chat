@@ -10,6 +10,8 @@ import protocol.command.CommandConstants;
 @Data
 public class MessageRespondPacket extends Packet{
 
+    private String fromUserName;
+
     private String message;
 
     @Override

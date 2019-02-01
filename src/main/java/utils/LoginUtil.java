@@ -3,6 +3,9 @@ package utils;
 import attribute.Attributes;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
+import session.Session;
+
+import java.util.UUID;
 
 public class LoginUtil {
     public static void markAsLogin(Channel channel) {
@@ -14,4 +17,6 @@ public class LoginUtil {
 
         return loginAttr.get() != null;
     }
+
+
 }

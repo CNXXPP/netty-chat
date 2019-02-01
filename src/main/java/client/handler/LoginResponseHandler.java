@@ -10,17 +10,17 @@ import java.util.UUID;
 
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespondPacket> {
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println(new Date() + ": 客户端开始登录");
-        // 创建登录对象
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-        loginRequestPacket.setUserId(UUID.randomUUID().toString());
-        loginRequestPacket.setUsername("xupan");
-        loginRequestPacket.setPassword("1123");
-        // 写数据
-        ctx.channel().writeAndFlush(loginRequestPacket);
-    }
+//    @Override
+//    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+//        System.out.println(new Date() + ": 客户端开始登录");
+//        // 创建登录对象
+//        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+//        loginRequestPacket.setUserId(UUID.randomUUID().toString());
+//        loginRequestPacket.setUsername("xupan");
+//        loginRequestPacket.setPassword("1123");
+//        // 写数据
+//        ctx.channel().writeAndFlush(loginRequestPacket);
+//    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, LoginRespondPacket loginRespondPacket) throws Exception {
