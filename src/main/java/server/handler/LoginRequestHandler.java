@@ -6,6 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.PacketCodeC;
 import protocol.request.LoginRequestPacket;
 import protocol.respond.LoginRespondPacket;
+import utils.LoginUtil;
 
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             // 校验成功
             loginRespondPacket.setReason("登录成功");
             loginRespondPacket.setSuccess(true);
+            LoginUtil.markAsLogin(channelHandlerContext.channel());
         } else {
             // 校验失败
             loginRespondPacket.setReason("用户名或密码错误");
