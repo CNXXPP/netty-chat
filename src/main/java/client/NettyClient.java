@@ -3,6 +3,7 @@ package client;
 import client.handler.ClientHandler;
 import client.handler.LoginResponseHandler;
 import client.handler.MessageResponseHandler;
+import codec.PacketCodecHandler;
 import codec.PacketDecoder;
 import codec.PacketEncoder;
 import codec.Spliter;
@@ -36,10 +37,11 @@ public class NettyClient {
             protected void initChannel(SocketChannel ch) throws Exception {
                 //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));//长度域的起始偏移量、长度域长度
                 ch.pipeline().addLast(new Spliter());
-                ch.pipeline().addLast(new PacketDecoder());
+                ch.pipeline().addLast(new PacketCodecHandler());
+                //ch.pipeline().addLast(new PacketDecoder());
                 ch.pipeline().addLast(new LoginResponseHandler());
                 ch.pipeline().addLast(new MessageResponseHandler());
-                ch.pipeline().addLast(new PacketEncoder());
+//                ch.pipeline().addLast(new PacketEncoder());
             }
         });
 
